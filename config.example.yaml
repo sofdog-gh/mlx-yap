@@ -1,0 +1,57 @@
+whisper:
+  model: mlx-community/whisper-large-v3-turbo   # best speed/quality on M4
+  language: null                                  # null = auto-detect
+
+hotkeys:
+  record: cmd_r                    # hold to record
+  cycle_capability: ctrl+shift+m   # cycle active capability
+
+api:
+  provider: mistral
+  model: mistral-small-latest
+  api_key_env: MISTRAL_API_KEY
+
+context:
+  project_name: ""      # helps model recognize spoken project name
+  # future fields: team_members, tech_stack, domain_terms, etc.
+
+active_capability: raw
+
+capabilities:
+  raw: null    # no post-processing, just transcription
+
+  cleanup:
+    description: "Fix grammar, remove filler words and hesitations"
+    prompt: |
+      Clean up this voice transcription. Fix grammar and punctuation.
+      Remove filler words (um, uh, like, you know, so, basically),
+      hesitations, and false starts.
+      Do not add any information that was not said.
+      {context}
+
+      Transcription:
+      {text}
+
+  summarize:
+    description: "Condense to key points"
+    prompt: |
+      Summarize this voice transcription concisely.
+      Preserve all key points, decisions, and action items.
+      Do not add any information that was not said.
+      {context}
+
+      Transcription:
+      {text}
+
+  clarify:
+    description: "Clean up and organize unstructured ideas"
+    prompt: |
+      Clean up this voice transcription. Fix grammar, remove filler words
+      and hesitations. Organize unstructured or scattered ideas into a
+      clear, logical order. Group related points together.
+      Do not add any information that was not said or cannot be
+      unequivocally inferred.
+      {context}
+
+      Transcription:
+      {text}
